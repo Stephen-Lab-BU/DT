@@ -2,10 +2,10 @@
 MainElectrode = {'FPz', 'AFz', 'Fz', 'FCz', 'Cz', 'CPz', 'Pz', 'POz', 'Oz', 'Iz', 'FP1', 'AF3', 'F1', 'FC1', 'CP1', 'P1', 'F3', 'FC3', 'C3', 'CP3', 'P3', 'PO3', 'O1', 'AF7', 'F7', 'FT7', 'T7', 'TP9', 'P9', 'F5', 'FC5', 'C5', 'CP5', 'P5', 'PO7', 'TP7', 'P7', 'FP2', 'AF4', 'F4', 'FC4', 'C4', 'CP4', 'P4', 'PO4', 'O2', 'F2', 'FC2', 'C2', 'CP2', 'P2', 'AF8', 'F6', 'FC6', 'C6', 'CP6', 'P6', 'PO8', 'F8', 'T8', 'TP8','P10', 'FT8','C1'};
 
 % Create a 64x64 matrix with zeros
-adjacencyMatrix = zeros(64, 64);
+LaplacianMatrix = zeros(64, 64);
 
 %%
-electrode_neighbors = struct(...
+Electrode_neighbors = struct(...
     'FPz', {{'FP1', 'FP2', 'AFz', 'AF3'}}, ...
     'AFz', {{'FPz', 'AF4', 'AF3', 'F2'}}, ...
     'Fz', {{'AFz', 'F1', 'F2', 'FCz'}}, ...
@@ -77,25 +77,24 @@ nameToIndex = containers.Map(MainElectrode, 1:length(MainElectrode));
 
 % Populate the adjacency matrix with 1s for pertinent neighbors
 for i = 1:length(MainElectrode)
-    electrode = MainElectrode{i};
-    if isfield(electrode_neighbors, electrode)
-        neighbors = electrode_neighbors.(electrode);
+    Electrode = MainElectrode{i};
+    if isfield(Electrode_neighbors, Electrode)
+        neighbors = Electrode_neighbors.(Electrode);
         for j = 1:length(neighbors)
             neighbor = neighbors{j};
 
             % Check if the neighbor is in the list to avoid errors
             if isKey(nameToIndex, neighbor)
-                adjacencyMatrix(i, nameToIndex(neighbor)) = 1;
+                LaplacianMatrix(i, nameToIndex(neighbor)) = 1;
             end
         end
     end
 end
-
 %%
 %Verification Purposes before topoplot
 
 % Create a table from the adjacency matrix with electrode labels
-adjacencyTable = array2table(adjacencyMatrix, 'RowNames', MainElectrode, 'VariableNames', MainElectrode);
+LaplacianElectrode_Table = array2table(LaplacianMatrix, 'RowNames', MainElectrode, 'VariableNames', MainElectrode);
 
 % Display part of the table to verify
-disp(adjacencyTable(1:10, 1:10));  % Adjust indices as necessary to verify everything
+disp(LaplacianElectrode_Table(1:10, 1:10));  % Adjust indices as necessary to verify everything
