@@ -79,7 +79,7 @@ LaplacianMatrix = zeros(64, 64);
 % Create a mapping from electrode names to indices
 nameToIndex = containers.Map(MainElectrode, 1:length(MainElectrode));
 
-% Populate the adjacency matrix with 1s for pertinent neighbors
+% Add the matrix with 1s for pertinent neighbors
 for i = 1:length(MainElectrode)
     Electrode = MainElectrode{i};
     if isKey(Electrode_neighbors, Electrode)
@@ -95,9 +95,9 @@ for i = 1:length(MainElectrode)
     end
 end
 
-% Verification Purposes before topoplot
+%% Verification Purposes before topoplot
 
-% Create a table from the adjacency matrix with electrode labels
+% Create a table from the adajacency matrix with electrode labels
 LaplacianElectrode_Table = array2table(LaplacianMatrix, 'RowNames', MainElectrode, 'VariableNames', MainElectrode);
 
 % Display part of the table to verify
