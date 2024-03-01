@@ -7,8 +7,11 @@ Electrode_neighbors = containers.Map();
 %%
 % Define electrode neighbors using the map
 Electrode_neighbors('FPz') = {'FP1', 'FP2', 'AFz', 'AF3','AF4'};
+Electrode_neighbors('O1') = {'PO3', 'PO7', 'Iz', 'Oz', 'POz'};
+Electrode_neighbors('O2') = {'PO8', 'Oz', 'POz', 'Iz','PO4'};
+Electrode_neighbors('AF3') = {'AFz', 'F1', 'F3', 'AF7','FP1'};
+Electrode_neighbors('Iz') = {'O2', 'Oz', 'O1'};
 Electrode_neighbors('AFz') = {'FPz', 'AF4', 'AF3', 'F2'};
-Electrode_neighbors('AF3') = {'AFz', 'F1', 'F3', 'AF7'};
 Electrode_neighbors('AF4') = {'AF8', 'AFz', 'F4', 'FP2'};
 Electrode_neighbors('AF7') = {'FP1', 'AF3', 'F5', 'F7'};
 Electrode_neighbors('AF8') = {'FP2', 'AF4', 'F8', 'F6'};
@@ -48,9 +51,6 @@ Electrode_neighbors('FPz') = {'FP1', 'FP2', 'AFz', 'AF3', 'AF4'};
 Electrode_neighbors('FT7') = {'FC5', 'F5', 'F7', 'T7'};
 Electrode_neighbors('FT8') = {'T8', 'F8', 'FC6', 'F6'};
 Electrode_neighbors('Fz') = {'AFz', 'F1', 'F2', 'FCz'};
-Electrode_neighbors('Iz') = {'O2', 'Oz', 'O1'};
-Electrode_neighbors('O1') = {'PO3', 'PO7', 'Iz', 'Oz', 'POz'};
-Electrode_neighbors('O2') = {'PO8', 'Oz', 'POz', 'Iz','PO4'};
 Electrode_neighbors('Oz') = {'O2', 'POz', 'O1', 'Iz'};
 Electrode_neighbors('P1') = {'Pz', 'P3', 'CP1', 'PO3'};
 Electrode_neighbors('P10') = {'P8', 'TP8', 'PO8', 'TP10'};
