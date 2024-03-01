@@ -4,6 +4,7 @@ MainElectrode = {'FPz', 'AFz', 'Fz', 'FCz', 'Cz', 'CPz', 'Pz', 'POz', 'Oz', 'Iz'
 % Create a containers.Map object to store electrode neighbors
 Electrode_neighbors = containers.Map();
 
+%%
 % Define electrode neighbors using the map
 Electrode_neighbors('FPz') = {'FP1', 'FP2', 'AFz', 'AF3'};
 Electrode_neighbors('AFz') = {'FPz', 'AF4', 'AF3', 'F2'};
@@ -32,7 +33,7 @@ Electrode_neighbors('F3') = {'F1', 'F5', 'AF3', 'FC3'};
 Electrode_neighbors('F4') = {'F6', 'F2', 'AF4', 'FC4'};
 Electrode_neighbors('F5') = {'F3', 'F7', 'AF7', 'FC5'};
 Electrode_neighbors('F6') = {'F8', 'FC6', 'F4', 'AF8'};
-Electrode_neighbors('F7') = {'AF6', 'F5', 'FC5', 'FT7'};
+Electrode_neighbors('F7') = {'AF7', 'F5', 'FC5', 'FT7'};
 Electrode_neighbors('F8') = {'FT8', 'F6', 'AF8', 'FC6'};
 Electrode_neighbors('FC1') = {'FCz', 'FC3', 'F1', 'C1'};
 Electrode_neighbors('FC2') = {'FC4', 'FCz', 'C2', 'F2'};
@@ -71,10 +72,14 @@ Electrode_neighbors('T8') = {'TP10', 'FT8', 'C6', 'TP8'};
 Electrode_neighbors('TP7') = {'CP5', 'TP9', 'P7', 'T7'};
 Electrode_neighbors('TP8') = {'TP10', 'T8', 'P8', 'CP6'};
 Electrode_neighbors('TP9') = {'T7', 'TP7', 'P9', 'P7'};
+Electrode_neighbors('TP10') = {'TP8', 'T8', 'P10', 'PO8'};
+Electrode_neighbors('P8') = {'TP8', 'P10', 'P6', 'PO8'};
 
 
+
+%%
 % Create a 64x64 matrix with zeros
-LaplacianMatrix = zeros(64, 64);
+AdjacencyMatrix = zeros(64, 64);
 
 % Create a mapping from electrode names to indices
 nameToIndex = containers.Map(MainElectrode, 1:length(MainElectrode));
@@ -89,7 +94,7 @@ for i = 1:length(MainElectrode)
 
             % Check if the neighbor is in the list to avoid errors
             if isKey(nameToIndex, neighbor)
-                LaplacianMatrix(i, nameToIndex(neighbor)) = 1;
+                AdjacencyMatrix(i, nameToIndex(neighbor)) = 1;
             end
         end
     end
@@ -98,7 +103,7 @@ end
 %% Verification Purposes before topoplot
 
 % Create a table from the adajacency matrix with electrode labels
-LaplacianElectrode_Table = array2table(LaplacianMatrix, 'RowNames', MainElectrode, 'VariableNames', MainElectrode);
+LaplacianElectrode_Table = array2table(AdjacencyMatrix, 'RowNames', MainElectrode, 'VariableNames', MainElectrode);
 
 % Display part of the table to verify
 disp(LaplacianElectrode_Table(1:10, 1:10));  % Adjust indices as necessary to verify everything
