@@ -1,4 +1,4 @@
-% Define all 66 electrodes - Based on https://www.sciencedirect.com/science/article/pii/S0167876015001609 Laplacian Montage Fig. 5
+% Define all 66 electrodes
 MainElectrode = {'FPz', 'AFz', 'Fz', 'FCz', 'Cz', 'CPz', 'Pz', 'POz', 'Oz', 'Iz', 'FP1', 'AF3', 'F1', 'FC1', 'CP1', 'P1', 'F3', 'FC3', 'C3', 'CP3', 'P3', 'PO3', 'O1', 'AF7', 'F7', 'FT7', 'T7', 'TP9', 'P9', 'F5', 'FC5', 'C5', 'CP5', 'P5', 'PO7', 'TP7', 'P7', 'FP2', 'AF4', 'F4', 'FC4', 'C4', 'CP4', 'P4', 'PO4', 'O2', 'F2', 'FC2', 'C2', 'CP2', 'P2', 'AF8', 'F6', 'FC6', 'C6', 'CP6', 'P6', 'PO8', 'F8', 'T8', 'TP8','P10', 'FT8','C1','P8','TP10'};
 
 % Create a containers.Map object to store electrode neighbors
@@ -51,7 +51,7 @@ Electrode_neighbors('Fz') = {'AFz', 'F1', 'F2', 'FCz'};
 Electrode_neighbors('Iz') = {'O2', 'Oz', 'O1'};
 Electrode_neighbors('O1') = {'PO3', 'PO7', 'Iz', 'Oz'};
 Electrode_neighbors('O2') = {'PO8', 'Oz', 'POz', 'Iz'};
-Electrode_neighbors('O4z') = {'O2', 'POz', 'O1', 'Iz'};
+Electrode_neighbors('Oz') = {'O2', 'POz', 'O1', 'Iz'};
 Electrode_neighbors('P1') = {'Pz', 'P3', 'CP1', 'PO3'};
 Electrode_neighbors('P10') = {'P8', 'TP8', 'PO8', 'TP10'};
 Electrode_neighbors('P2') = {'P4', 'Pz', 'CP2', 'PO4'};
@@ -75,8 +75,6 @@ Electrode_neighbors('TP9') = {'T7', 'TP7', 'P9', 'P7'};
 Electrode_neighbors('TP10') = {'TP8', 'T8', 'P10', 'PO8'};
 Electrode_neighbors('P8') = {'TP8', 'P10', 'P6', 'PO8'};
 
-
-
 %%
 % Create a 66x66 matrix with zeros
 AdjacencyMatrix = zeros(66, 66);
@@ -99,29 +97,3 @@ for i = 1:length(MainElectrode)
         end
     end
 end
-
-%% Verification Purposes before topoplot
-
-% Create a table from the adajacency matrix with electrode labels
-LaplacianElectrode_Table = array2table(AdjacencyMatrix, 'RowNames', MainElectrode, 'VariableNames', MainElectrode);
-
-% Display part of the table to verify
-disp(LaplacianElectrode_Table(1:10, 1:10));  % Adjust indices as necessary to verify everything
-%%
-%More Verification - Visualization
-% Make sure the adjacency matrix is symmetric
-AdjacencyMatrix = triu(AdjacencyMatrix) + triu(AdjacencyMatrix,1)';
-
-% Create the graph object using the adjacency matrix
-G = graph(AdjacencyMatrix);
-
-% Create a cell array of labels for the electrodes
-labels = MainElectrode;
-
-% Plot the graph with the specified layout and labels
-h = plot(G, 'Layout', 'force', 'NodeLabel', labels);
-
-% To change the marker size, you can use:
-h.MarkerSize = 7;
-
-hold on;
