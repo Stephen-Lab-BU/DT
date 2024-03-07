@@ -1,20 +1,20 @@
 function data_laplac = OthercalculateLaplacian(data, ch_labels, montage)
-    % Validate input sizes
+    % Check input sizes
     assert(size(data, 1) == length(ch_labels), 'Mismatch between data rows and channel labels');
     
     % Initialize the output matrix
     data_laplac = zeros(size(data));  % Same dimensions as input data
     
-    for i = 1:length(ch_labels)  % Iterate over channels
-        channel = ch_labels{i};  % Current channel label
+    for i = 1:length(ch_labels)  
+        channel = ch_labels{i}; 
         
-        % Ensure current channel exists in the montage map
+        % Check if current channel exists in the montage map
         if ~isKey(montage, channel)
             warning('Channel %s not found in montage, skipping.', channel);
-            continue;  % Skip to the next channel
+            continue; 
         end
 
-        % Retrieve neighbor labels from the montage
+        % Get neighbor labels from the montage
         neighbors = montage(channel);
         
         % Find indices of neighbors in ch_labels
