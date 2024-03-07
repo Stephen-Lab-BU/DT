@@ -100,8 +100,8 @@ end
 
 %%
 %Run updateChannelLabels function before running Laplacian Calculation Function 
-load('Archive_1_CN7.mat');  % Load your .mat file
-updatedLabels = updateChannelLabels(HDR.label);  % Update the labels
+load('/Users/daphne/Desktop/StephenLab     Rotation/Archive_1_CN7.mat');  % Load your .mat file
+updatedLabels = updateHDRLabels(HDR.label);  % Update the labels
 
 %% Verification Purposes before topoplot
 
