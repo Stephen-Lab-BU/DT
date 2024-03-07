@@ -98,6 +98,11 @@ for i = 1:length(MainElectrode)
     end
 end
 
+%%
+%Run updateChannelLabels function before running Laplacian Calculation Function 
+load('Archive_1_CN7.mat');  % Load your .mat file
+updatedLabels = updateChannelLabels(HDR.label);  % Update the labels
+
 %% Verification Purposes before topoplot
 
 % Create a table from the adajacency matrix with electrode labels
