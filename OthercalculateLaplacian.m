@@ -1,9 +1,9 @@
 function data_laplac = OthercalculateLaplacian(data, ch_labels, montage)
-    % Check input sizes
+   
     assert(size(data, 1) == length(ch_labels), 'Mismatch between data rows and channel labels');
     
-    % Initialize the output matrix
-    data_laplac = zeros(size(data));  % Same dimensions as input data
+    % Create the output matrix
+    data_laplac = zeros(size(data)); 
     
     for i = 1:length(ch_labels)  
         channel = ch_labels{i}; 
@@ -21,7 +21,7 @@ function data_laplac = OthercalculateLaplacian(data, ch_labels, montage)
         neighbor_indices = find(ismember(ch_labels, neighbors));
         
         % Check for sufficient neighbors
-        if numel(neighbor_indices) < 2
+        if numel(neighbor_indices) < 1 %question = 1 or 2?
             warning('Not enough neighbors for channel %s', channel);
             continue;  % Skip to the next channel if not enough neighbors
         end

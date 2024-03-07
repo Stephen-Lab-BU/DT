@@ -1,9 +1,12 @@
+%Verifying that 'OthercalculateLaplacian' function works
+
+%Accessing eeglab folder
 eeglabpath = '/Users/daphne/Desktop/StephenLab Rotation/DT/eeglab2024.0';  % New EEGLAB path
 addpath(genpath(eeglabpath));  % Adds the new EEGLAB path and its subdirectories to MATLAB's search path
 savepath;
 
-Nchannels = length(HDR.label_finalized);  % Number of channels
-data_test = eye(Nchannels);  % Identity matrix as test data
+Nchannels = length(HDR.label_finalized);  
+data_test = eye(Nchannels); 
 
 data_laplac_test = OthercalculateLaplacian(data_test, HDR.label_finalized, Electrode_neighbors);
 
@@ -13,26 +16,9 @@ chanlocs = pop_chanedit(chanlocs, 'lookup', fullfile(eeglabpath, 'plugins', 'dip
 
 for i = 1:Nchannels
     figure;  % Create a new figure for each channel's plot
-    topoplot(data_laplac_test(:, i), chanlocs);  % Use 'chanlocs' with spatial information
+    topoplot(data_laplac_test(:, i), chanlocs);  
     title(sprintf('Laplacian of Channel %s', HDR.label_finalized{i}));
 end
-
-%% Easier visualization and verification
-% Create a single figure for all topoplots
-figure; 
-nrows = ceil(sqrt(Nchannels));  
-ncols = ceil(Nchannels / nrows);
-
-% Loop over channels and create subplots
-for i = 1:Nchannels
-    subplot(nrows, ncols, i);  
-    topoplot(data_laplac_test(:, i), chanlocs);  % Make sure 'chanlocs' is correct
-    title(HDR.label_finalized{i});  
-end
-
-% Maximize figure window and add a super title
-set(gcf, 'Units', 'Normalized', 'OuterPosition', [0 0 1 1]);
-sgtitle('Laplacian of All Channels');
 
 %%
 % For easier visualization and verification
@@ -40,8 +26,8 @@ eeglabpath = '/Users/daphne/Desktop/StephenLab Rotation/DT/eeglab2024.0';  % New
 addpath(genpath(eeglabpath));  % Adds the new EEGLAB path and its subdirectories to MATLAB's search path
 savepath;
 
-Nchannels = length(HDR.label_finalized);  % Number of channels
-data_test = eye(Nchannels);  % Identity matrix as test data
+Nchannels = length(HDR.label_finalized); 
+data_test = eye(Nchannels);  
 
 data_laplac_test = OthercalculateLaplacian(data_test, HDR.label_finalized, Electrode_neighbors);
 
@@ -63,7 +49,7 @@ end
 % Improve subplot layout
 set(gcf, 'Units', 'Normalized', 'OuterPosition', [0 0 1 1]);  % Optionally maximize figure window
 
-% Add a title in the bottom left corner of the figure
+% Add title in the bottom left corner 
 annotation('textbox', [0.01, 0.01, 0.1, 0.05], 'String', 'Laplacian of All Channels', ...
     'EdgeColor', 'none', 'HorizontalAlignment', 'left', 'VerticalAlignment', 'bottom', 'FontSize', 30);
 
