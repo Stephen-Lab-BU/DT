@@ -1,27 +1,27 @@
 function data_laplac = calculateLaplacian(data, ch_labels, montage)
-    % Ensure ch_labels and keys of montage map are consistent
-    assert(all(ismember(ch_labels, keys(montage))), 'All channels must be in the montage.');
+    % Ensure the number of channels in 'data' matches the length of 'ch_labels'
+    assert(size(data, 1) == length(ch_labels), 'Mismatch between data rows and channel labels');
 
-    % Initialize the output matrix with zeros
-    [Nchannels, Ntimepoints] = size(data);
-    data_laplac = zeros(Nchannels, Ntimepoints);
+    [Nchannels, ~] = size(data);
+    data_laplac = zeros(Nchannels, size(data, 2));  % Initialize the output matrix
 
     for i = 1:Nchannels
-        channel = ch_labels{i};
-        
-        % Retrieve neighbors as a cell array of strings from the montage
-        neighbors = montage(channel); % Here, neighbors are directly taken as a cell array from the montage
-        
-        % Find indices of neighbors in ch_labels
-        [~, neighbors_indices] = ismember(neighbors, ch_labels);
-        
-        % Check if there are enough neighbors
-        if numel(neighbors_indices) < 2
-            fprintf('Warning: Not enough neighbors for channel %s\n', channel);
-            continue;  % Skip to the next channel
+        channel = ch_labels{i};  % Current channel label
+        if ~isKey(montage, channel)
+            warning('Channel %s not found in montage, skipping.', channel);
+            continue;
         end
-        
-        % Calculate the Laplacian-referenced data
-        data_laplac(i, :) = data(i, :) - mean(data(neighbors_indices, :), 1);
+
+        neighbors = montage(channel);  % Get neighbors from the montage
+        neighbor_indices = find(ismember(ch_labels, neighbors));  % Find indices of neighbors in 'ch_labels'
+
+        % Ensure there are enough neighbors
+        if numel(neighbor_indices) < 2
+            warning('Not enough neighbors for channel %s', channel);
+            continue;
+        end
+
+        % Calculate Laplacian-referenced signal for the current channel
+        data_laplac(i, :) = data(i, :) - mean(data(neighbor_indices, :), 1);
     end
 end

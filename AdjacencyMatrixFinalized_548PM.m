@@ -133,10 +133,14 @@ hold on;
 %%
 %Before running Laplacian Calculation Function
 HDR = finalizeHDRLabels(HDR, Electrode_neighbors);
+% Trim data to the first 58 rows, corresponding to the channels in HDR.label_finalized
+data_trimmed = data(1:58, :);  % Adjust '58' if the number of channels changes
+
 
 %%
-%Laplacian Calculation
+%Laplacian Calculation 
 % Assuming 'data' is your EEG data matrix, where each row corresponds to a channel in HDR.label_finalized
 % and each column represents a time point
-data_laplac = calculateLaplacian(data, HDR.label_finalized, HDR.Electrode_neighbors_finalized);
+
+data_laplac = OthercalculateLaplacian(data_trimmed, HDR.label_finalized, Electrode_neighbors);
 
