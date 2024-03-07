@@ -97,11 +97,13 @@ for i = 1:length(MainElectrode)
         end
     end
 end
+%% Changing HDR.label before Laplacian Calculations
 
-%%
-%Run updateChannelLabels function before running Laplacian Calculation Function 
-load('/Users/daphne/Desktop/StephenLab     Rotation/Archive_1_CN7.mat');  % Load your .mat file
-updatedLabels = updateHDRLabels(HDR.label);  % Update the labels
+% Load your .mat file containing the HDR structure
+load('/Users/daphne/Desktop/StephenLab     Rotation/Archive_1_CN7.mat')
+
+% Update the HDR structure with the new labels
+HDR = updateHDRLabels(HDR);  % The entire HDR structure is updated
 
 %% Verification Purposes before topoplot
 
@@ -128,3 +130,6 @@ h = plot(G, 'Layout', 'force', 'NodeLabel', labels);
 h.MarkerSize = 7;
 
 hold on;
+%%
+%Before running Laplacian Calculation Function
+HDR = finalizeHDRLabels(HDR, Electrode_neighbors);
