@@ -98,9 +98,17 @@ for i = 1:length(MainElectrode)
     end
 end
 
+%% Changing HDR.label before Laplacian Calculations
+
+% Load your .mat file containing the HDR structure
+load('/Users/daphne/Desktop/StephenLab     Rotation/Archive_1_CN7.mat')
+
+% Update the HDR structure with the new labels
+HDR = updateHDRLabels(HDR);  % The entire HDR structure is updated
+
 %% Verification Purposes before topoplot
 
-% Create a table from the adjacency matrix with electrode labels
+% Create a table from the adajacency matrix with electrode labels
 LaplacianElectrode_Table = array2table(AdjacencyMatrix, 'RowNames', MainElectrode, 'VariableNames', MainElectrode);
 
 % Display part of the table to verify
@@ -123,3 +131,17 @@ h = plot(G, 'Layout', 'force', 'NodeLabel', labels);
 h.MarkerSize = 7;
 
 hold on;
+%%
+%Before running Laplacian Calculation Function
+HDR = finalizeHDRLabels(HDR, Electrode_neighbors);
+% Trim data to the first 58 rows, corresponding to the channels in HDR.label_finalized
+data_trimmed = data(1:58, :);  % Adjust '58' if the number of channels changes
+
+
+%%
+%Laplacian Calculation 
+% Assuming 'data' is your EEG data matrix, where each row corresponds to a channel in HDR.label_finalized
+% and each column represents a time point
+
+data_laplac = OthercalculateLaplacian(data_trimmed, HDR.label_finalized, Electrode_neighbors);
+
