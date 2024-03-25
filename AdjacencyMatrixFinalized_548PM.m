@@ -143,4 +143,40 @@ data_trimmed = data(1:58, :);  % Adjust '58' if the number of channels changes
 % and each column represents a time point
 
 data_laplac = OthercalculateLaplacian(data_trimmed, HDR.label_finalized, Electrode_neighbors);
+%%
+Fs = 1024; % Define the sampling frequency
+L = size(data_trimmed, 2); % Total number of time points
+t = (0:L-1)/Fs; % Time vector in seconds
 
+% Plotting all electrodes
+figure;
+for i = 1:size(data_trimmed, 1)
+    subplot(size(data_trimmed, 1), 1, i);
+    plot(t, data_trimmed(i, :));
+    title(['Electrode ' num2str(i)]);
+    xlabel('Time (s)');
+    ylabel('Amplitude');
+end
+
+%%
+newFs = 256; % New sampling frequency
+dsfactor = Fs / newFs; % Downsampling factor
+
+% Downsampling data
+dsdata = zeros(size(data_trimmed, 1), floor(L/dsfactor));
+for i = 1:size(data_trimmed, 1)
+    dsdata(i, :) = resample(double(data_trimmed(i, :)), newFs, Fs);
+end
+
+% Downsampling time axis
+dst = downsample(t, dsfactor);
+%%
+electrodeIndex = 1; % Example: first electrode
+figure;
+plot(t, data_trimmed(electrodeIndex, :), 'b'); hold on; % Original data in blue
+plot(dst, dsdata(electrodeIndex, :), 'r'); % Downsampled data in red
+legend('Original', 'Downsampled');
+xlabel('Time (s)');
+ylabel('Amplitude');
+title(['Electrode ' num2str(electrodeIndex) ' Data Comparison']);
+%%
