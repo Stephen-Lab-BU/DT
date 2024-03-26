@@ -1,5 +1,5 @@
 function generateAndSaveSpectrograms4EachElectrode(dsdata, params, MainElectrode)
-%This function's purpose is to generate and save spectrograms of each
+%This function serves to generate and save spectrograms of each
 %individual electrode after is has undergone the laplacian calculations and
 %the downsampling and will save in a folder for easy visualization and
 %confirmation of individual electrode activity
@@ -7,21 +7,22 @@ function generateAndSaveSpectrograms4EachElectrode(dsdata, params, MainElectrode
     % Define the output folder name
     outputFolder = 'SpectrogramsFromMatlab';
     
-    % Check if the output folder exists, if not, create it
+    % Check if the output folder exists, if not, create it!
     if ~exist(outputFolder, 'dir')
-        mkdir(outputFolder); % This creates the folder if it doesn't exist
+        mkdir(outputFolder); % This creates the folder if does not exist
     end
     
-    % Initialize a counter for the saved figures
+    % Initialize a counter for the saved figures (just to check that it
+    % saves a total of 58 figures, if not something is wrong)
     savedFiguresCount = 0;
     
     % Loop through each electrode to compute and save the spectrogram
     for i = 1:size(dsdata, 1)
         [S, f] = mtspectrumc(dsdata(i, :), params); % Compute spectrogram
 
-        % Create a figure without displaying it
+        % Create figure without displaying it
         fig = figure('Visible', 'off');
-        plot(f, 10*log10(S)); % Plot in dB scale for better visibility
+        plot(f, 10*log10(S)); % Plot in dB scale for improved visibility
         title(['Electrode ' MainElectrode{i} ' Spectrogram']);
         xlabel('Frequency (Hz)');
         ylabel('Power/Frequency (dB/Hz)');

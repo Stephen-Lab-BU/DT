@@ -142,10 +142,10 @@ data_trimmed = data(1:58, :);  % Adjust '58' if the number of channels changes
 
 data_laplac = OthercalculateLaplacian(data_trimmed, HDR.label_finalized, Electrode_neighbors);
 %% Downsampling 
-% Assuming 'data_laplac' is your Laplacian-referenced EEG data
+
 originalFs = 1024; % Original sampling frequency
 targetFs = 256;    % Target sampling frequency after downsampling
-electrodeIndex = 1; % Example: index for the electrode you want to plot
+electrodeIndex = 1; % Calling the index for the electrode I want to plot (in this case it is the first one)
 
 % Call the downsampleAndPlot function
 [dsdata, dst] = downsampleAndPlotFirstElectrode(data_laplac, originalFs, targetFs, electrodeIndex);
