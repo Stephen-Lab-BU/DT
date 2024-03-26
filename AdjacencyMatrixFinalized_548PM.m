@@ -4,8 +4,9 @@ MainElectrode = {'Fpz', 'AFz', 'Fz', 'FCz', 'Cz', 'Cpz', 'Pz', 'POz', 'Oz', 'Iz'
 % Create a containers.Map object to store electrode neighbors
 Electrode_neighbors = containers.Map();
 
-%%
-% Define electrode neighbors using the map
+%% Defining Electrodes 
+% Define electrode neighbors using the Kayes paper as montage reference 
+%Paper:https://www.sciencedirect.com/science/article/pii/S0167876015001609
 Electrode_neighbors('Fpz') = {'Fp1', 'Fp2', 'AFz', 'AF3','AF4'}; %5 neighbors
 Electrode_neighbors('O1') = {'PO3', 'PO7', 'Iz', 'Oz', 'POz'}; %5 neighbors
 Electrode_neighbors('O2') = {'PO8', 'Oz', 'POz', 'Iz','PO4'}; %5 neighbors
@@ -75,7 +76,7 @@ Electrode_neighbors('TP9') = {'T7', 'TP7', 'P9', 'P7'};
 Electrode_neighbors('TP10') = {'TP8', 'T8', 'P10', 'PO8'};
 Electrode_neighbors('P8') = {'TP8', 'P10', 'P6', 'PO8'};
 
-%%
+%% Further Creating Matrix for Laplacian Montage
 % Create a 66x66 matrix with zeros
 AdjacencyMatrix = zeros(66, 66);
 
@@ -112,8 +113,7 @@ LaplacianElectrode_Table = array2table(AdjacencyMatrix, 'RowNames', MainElectrod
 
 % Display part of the table to verify
 disp(LaplacianElectrode_Table(1:10, 1:10));  % Adjust indices as necessary to verify everything
-%%
-%More Verification - Visualization
+%% More Verification - Visualization
 % Make sure the adjacency matrix is symmetric
 AdjacencyMatrix = triu(AdjacencyMatrix) + triu(AdjacencyMatrix,1)';
 
@@ -130,53 +130,35 @@ h = plot(G, 'Layout', 'force', 'NodeLabel', labels);
 h.MarkerSize = 7;
 
 hold on;
-%%
+%% Trimming data before running Laplacian Calculations
 %Before running Laplacian Calculation Function
 HDR = finalizeHDRLabels(HDR, Electrode_neighbors);
 % Trim data to the first 58 rows, corresponding to the channels in HDR.label_finalized
 data_trimmed = data(1:58, :);  % Adjust '58' if the number of channels changes
 
-
-%%
-%Laplacian Calculation 
+%% Actual Laplacian Calculation on Data
 % Assuming 'data' is your EEG data matrix, where each row corresponds to a channel in HDR.label_finalized
 % and each column represents a time point
 
 data_laplac = OthercalculateLaplacian(data_trimmed, HDR.label_finalized, Electrode_neighbors);
-%%
-Fs = 1024; % Define the sampling frequency
-L = size(data_trimmed, 2); % Total number of time points
-t = (0:L-1)/Fs; % Time vector in seconds
+%% Downsampling 
+% Assuming 'data_laplac' is your Laplacian-referenced EEG data
+originalFs = 1024; % Original sampling frequency
+targetFs = 256;    % Target sampling frequency after downsampling
+electrodeIndex = 1; % Example: index for the electrode you want to plot
 
-% Plotting all electrodes
-figure;
-for i = 1:size(data_trimmed, 1)
-    subplot(size(data_trimmed, 1), 1, i);
-    plot(t, data_trimmed(i, :));
-    title(['Electrode ' num2str(i)]);
-    xlabel('Time (s)');
-    ylabel('Amplitude');
-end
+% Call the downsampleAndPlot function
+[dsdata, dst] = downsampleAndPlotFirstElectrode(data_laplac, originalFs, targetFs, electrodeIndex);
 
-%%
-newFs = 256; % New sampling frequency
-dsfactor = Fs / newFs; % Downsampling factor
+%% Run spectrograms for every electrode and save the figures 
 
-% Downsampling data
-dsdata = zeros(size(data_trimmed, 1), floor(L/dsfactor));
-for i = 1:size(data_trimmed, 1)
-    dsdata(i, :) = resample(double(data_trimmed(i, :)), newFs, Fs);
-end
+% Define parameters for the mtspectrumc function from Chronux
+params.Fs = targetFs;  % The sampling frequency after downsampling
+params.fpass = [0 targetFs/2];  % The frequency band of interest (0 to Nyquist frequency)
+params.tapers = [3 5];  % Time-bandwidth product and the number of tapers
+params.trialave = 0;  % Whether to average over trials (0 for no averaging)
 
-% Downsampling time axis
-dst = downsample(t, dsfactor);
-%%
-electrodeIndex = 1; % Example: first electrode
-figure;
-plot(t, data_trimmed(electrodeIndex, :), 'b'); hold on; % Original data in blue
-plot(dst, dsdata(electrodeIndex, :), 'r'); % Downsampled data in red
-legend('Original', 'Downsampled');
-xlabel('Time (s)');
-ylabel('Amplitude');
-title(['Electrode ' num2str(electrodeIndex) ' Data Comparison']);
-%%
+
+% Run spectrograms for every electrode and save the figures 
+generateAndSaveSpectrograms4EachElectrode(dsdata, params, MainElectrode);
+

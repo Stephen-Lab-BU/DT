@@ -1,0 +1,31 @@
+function [dsdata, dst] = downsampleAndPlotFirstElectrode(data, originalFs, targetFs, electrodeIndex)
+%This function is to downsample data from 1024 Hz down to 256 Hz and to
+%plot the first electrode before and after the downsampling has occurred. 
+
+    % Calculate the downsampling factor
+    dsfactor = originalFs / targetFs;
+    
+    % Calculate the original time vector
+    L = size(data, 2); % Total number of time points in the data
+    t = (0:L-1) / originalFs; % Time vector for the original data
+    
+    % Initialize the downsampled data array
+    dsdata = zeros(size(data, 1), floor(L/dsfactor));
+    
+    % Downsample the data for each electrode
+    for i = 1:size(data, 1)
+        dsdata(i, :) = resample(double(data(i, :)), targetFs, originalFs);
+    end
+    
+    % Calculate the downsampled time vector
+    dst = downsample(t, dsfactor);
+    
+    % Plotting for one electrode before and after downsampling
+    figure;
+    plot(t, data(electrodeIndex, :), 'b'); hold on; % Original data in blue
+    plot(dst, dsdata(electrodeIndex, :), 'r'); % Downsampled data in red
+    legend('Original', 'Downsampled');
+    xlabel('Time (s)');
+    ylabel('Amplitude');
+    title(['Electrode ' num2str(electrodeIndex) ' Data Comparison']);
+end
