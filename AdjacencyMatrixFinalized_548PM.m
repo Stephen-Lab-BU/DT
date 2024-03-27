@@ -160,5 +160,5 @@ params.trialave = 0;  % Whether to average over trials (0 for no averaging)
 
 
 % Run spectrograms for every electrode and save the figures 
-generateAndSaveSpectrograms4EachElectrode(dsdata, params, MainElectrode);
+generateAndSaveActualSpectrograms4EachElectrode(dsdata, params, MainElectrode);
 
