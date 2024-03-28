@@ -153,8 +153,6 @@ electrodeIndex = 1; % Calling the index for the electrode I want to plot (in thi
 % Call the downsampleAndPlot function
 [dsdata, dst] = downsampleAndPlotFirstElectrode(data_laplac, originalFs, targetFs, electrodeIndex);
 
-%whats happening is the way I am calling the fn, its assuming that the data
-%has a shape that is electrodes by time
 %% Run spectrograms for every electrode and save the figures 
 
 % Define parameters for the mtspectrumc function from Chronux
@@ -167,5 +165,3 @@ params.trialave = 0;  % Whether to average over trials (0 for no averaging)
 % Run spectrograms for every electrode and save the figures 
 generateAndSaveActualSpectrograms4EachElectrode(dsdata, params, MainElectrode);
 
-%fix downsampling code, rerun spectrograms, session spectrograms, create a
-%new spectrogram that is only 2 mins, read multitaper paper, 

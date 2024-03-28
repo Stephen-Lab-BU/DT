@@ -22,15 +22,12 @@ function [dsdata, dst] = downsampleAndPlotFirstElectrode(data, originalFs, targe
     
     % Plotting 1 electrode before and after downsampling
     figure;
-    plot(t, data(electrodeIndex, :), 'b.'); hold on; % Original data in blue
-    plot(dst, dsdata(electrodeIndex, :), 'r.'); % Downsampled data in red
+    plot(t, data(electrodeIndex, :), 'b'); hold on; % Original data in blue
+    plot(dst, dsdata(electrodeIndex, :), 'r'); % Downsampled data in red
     legend('Original', 'Downsampled');
     xlabel('Time (s)');
     ylabel('Amplitude');
     title(['Electrode ' num2str(electrodeIndex) ' Data Comparison']);
 end
 
-%save the downsampled data in the same folder as the original data but have
-%the file name be difference to reflect that it has been laplacian
-%referenced and downsampled 
-
+%save the downsampled data in a folder 

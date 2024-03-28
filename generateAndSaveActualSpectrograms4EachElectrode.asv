@@ -6,7 +6,7 @@ function generateAndSaveActualSpectrograms4EachElectrode(dsdata, params, MainEle
     if ~exist(outputFolder, 'dir')
         mkdir(outputFolder);
     end
-    % can change the code to create a new output folder for it to change the dates 
+    
     % Initialize a counter for the saved figures
     savedFiguresCount = 0;
     
